@@ -1,0 +1,38 @@
+#cloud-config
+
+ssh_authorized_keys:
+ - ssh-rsa AAAAB3NzaC1yc2EAAAAAAAAAAAAAAAAAAA..............
+
+hostname: docker-1
+
+users:
+  - name: "core"
+    passwd: "$6$qM1Udxz8eZiEC4DW$Wfyq.wZyDhBSZCzqcu8NAdZjNqs0xyZca1EMGYkmCAGAkLyrqEZ9YDwFWa8XV5WxiLIn./.v/.oiNEhgFD8d.0"
+    groups:
+      - "sudo"
+
+coreos:
+  update:
+    reboot-strategy: off
+  units:
+    - name: systemd-networkd.service
+      command: stop
+    - name: static.network
+      runtime: true
+      content: |
+        [Match]
+        Name=eth0
+
+        [Network]
+        Address=10.41.175.179/24
+        Gateway=10.41.175.1
+        DNS=4.2.2.2
+    - name: down-interfaces.service
+      command: start
+      content: |
+        [Service]
+        Type=oneshot
+        ExecStart=/usr/bin/ip link set eth0 down
+        ExecStart=/usr/bin/ip addr flush dev eth0
+    - name: systemd-networkd.service
+      command: restart
