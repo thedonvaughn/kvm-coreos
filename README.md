@@ -99,7 +99,7 @@ systemctl start wokd
 
 * Go to https://YOUR_KVM_SERVER:8001 in your web browswer and login using root creds
 
-### Download CoreOS QEMU Image
+### Download CoreOS QEMU Image and cloud-config template
 
 * Make dir to hold coreos image and guest images
 
@@ -109,6 +109,46 @@ systemctl start wokd
 
 `wget https://stable.release.core-os.net/amd64-usr/current/coreos_production_qemu_image.img.bz2 -O - | bzcat > /vmstorage/coreos/os.img`
 
-* Create cloud-config template.  Can download mine from here.
+* Create cloud-config template.  Can download mine from [here](https://raw.githubusercontent.com/thedonvaughn/kvm-coreos/master/user_data).
 
-`wget https://gist.githubusercontent.com/dutchiechris/e5689a526d4651f6dec4880230fe3c89/raw/4576b956ab00430e644917f17080f4ccfd408615/user_data`
+`wget https://https://raw.githubusercontent.com/thedonvaughn/kvm-coreos/master/user_data -O /vmstorage/coreos/user_data`
+
+### Edit user_data, create configdrive.iso, and create CoreOS guest
+
+
+In this example we'll create a VM called coreos-1.
+
+* Create coreos-1 image directory
+
+```
+mkdir -p /vmstorage/coreos/coreos-1/`
+```
+
+* Copy user_data cloud-config template to new image dir
+
+```
+cp /vmstorage/coreos/user_data /vmstorage/coreos/coreos-1/
+cd /vmstorage/coreos/coreos-1/
+```
+
+* Edit /vmstorage/coreos/coreos-1/user_data.  Make sure to add your public ssh key, set your hostname, and configure your network.
+* You can set the 'core' user password with the following:
+
+```
+python -c 'import crypt,getpass; print(crypt.crypt(getpass.getpass(), crypt.mksalt(crypt.METHOD_SHA512)))'
+```
+
+* Create configdrive.iso from the edited user_data template
+
+```
+cd /vmstorage/coreos/coreos-1/
+mkdir -p cdrom/openstack/latest
+cp /vmstorage/coreos/coreos-1/user_data /vmstorage/coreos/coreos-1/cdrom/openstack/latest/
+mkisofs -R -V config-2 -o ./configdrive.iso ./cdrom/
+```
+
+* Create KVM vm for coreos-1
+
+```
+virt-install --connect qemu:///system --import --name coreos-1 --ram 1024 --vcpus 1 --os-type=linux --os-variant=virtio26 --disk path=/vmstorage/coreos/coreos-1/os.img,format=raw,bus=virtio --disk path=/vmstorage/coreos/coreos-1/configdrive.iso,device=cdrom,format=raw,bus=ide --network=bridge=bridge0 --accelerate --graphics vnc,listen=0.0.0.0 --noautoconsole
+``` 
