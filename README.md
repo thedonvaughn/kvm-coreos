@@ -7,15 +7,17 @@
 
 * Disable selinux
 
-`setenforce 1`
-
-`sed -i --follow-symlinks 's/^SELINUX=.*/SELINUX=disabled/g' /etc/sysconfig/selinux`
+```
+setenforce 1
+sed -i --follow-symlinks 's/^SELINUX=.*/SELINUX=disabled/g' /etc/sysconfig/selinux
+```
 
 * Stop firewall-cmd
 
-`systemctl disable firewalld`
-
-`systemctl stop firewalld`
+```
+systemctl disable firewalld
+systemctl stop firewalld
+```
 
 * Now we'll bridge your primary network interface.  This bridge will also be used for our virtual machines.  In this example we'll create a bridge named "bridge0".  We'll then bridge interface "eth0" to "bridge0" followed by a server reboot.
 * Copy ifcfg-eth0 to ifcfg-bridge0
@@ -64,9 +66,10 @@
 
 * Enabled and start libvirtd
 
-`systemctl enable libvirtd`
-
-`systemctl start libvirtd`
+```
+systemctl enable libvirtd
+systemctl start libvirtd
+```
 
 * Verify 
 
@@ -121,7 +124,7 @@ In this example we'll create a VM called coreos-1.
 * Create coreos-1 image directory
 
 ```
-mkdir -p /vmstorage/coreos/coreos-1/`
+mkdir -p /vmstorage/coreos/coreos-1/
 ```
 
 * Copy user_data cloud-config template to new image dir
