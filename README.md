@@ -114,7 +114,7 @@ systemctl start wokd
 
 * Create cloud-config template.  Can download mine from [here](https://raw.githubusercontent.com/thedonvaughn/kvm-coreos/master/user_data).
 
-`wget https://https://raw.githubusercontent.com/thedonvaughn/kvm-coreos/master/user_data -O /vmstorage/coreos/user_data`
+`wget https://raw.githubusercontent.com/thedonvaughn/kvm-coreos/master/user_data -O /vmstorage/coreos/user_data`
 
 ### Edit user_data, create configdrive.iso, and create CoreOS guest
 
