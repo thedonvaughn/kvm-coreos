@@ -4,8 +4,8 @@
 This is a quick guide to setup KVM hypervisor on CentOS 7
 
 1. Disable selinux
- > setenforce 1
- > sed -i --follow-symlinks 's/^SELINUX=.*/SELINUX=disabled/g' /etc/sysconfig/selinux
+`setenforce 1`
+`sed -i --follow-symlinks 's/^SELINUX=.*/SELINUX=disabled/g' /etc/sysconfig/selinux`
 1. Stop firewall-cmd
  > systemctl disable firewalld
  > systemctl stop firewalld
