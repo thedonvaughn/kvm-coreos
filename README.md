@@ -24,21 +24,27 @@ This is a quick guide to setup KVM hypervisor on CentOS 7
 6. Change DEVICE=eth0 to DEVICE=bridge0
 7. Change TYPE=Ethernet to TYPE="Bridge"
 
-```DEVICE=bridge0
+```
+   DEVICE=bridge0
    ONBOOT=yes
    TYPE="Bridge"
    BOOTPROTO=none
    IPADDR=10.41.175.178
    NETMASK=255.255.255.0
    DNS1=4.2.2.2
-```DNS2=8.8.8.8
+   DNS2=8.8.8.8
+```
 
 8. Edit /etc/sysconfig/network-scripts/ifcfg-eth0 and bridge it to bridge0
 
-```DEVICE=eth0
+```
+   DEVICE=eth0
    ONBOOT=yes
    TYPE=Ethernet
    BOOTPROTO=none
    BRIDGE="bridge0"
    DNS1=4.2.2.2
-```DNS2=8.8.8.8
+   DNS2=8.8.8.8
+```
+
+
